@@ -1,0 +1,34 @@
+{% load url from future %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	    <meta charset="utf-8">
+	    <title>Django Shortener</title>
+	</head>
+	<body>
+		{% if action == 'show_shrt' %}
+		<h1>URL details</h1>
+		<p>
+		{% for s in shrt %}
+			Go to <a href="{{ s.urlfull }}">{{ s.urlfull }}</a>
+		{% endfor %}			
+		</p>
+		{% else %}
+		<h1>Adding a new URL</h1>
+		<form method="post" action="{% url 'new_shrt' %}">{% csrf_token %}
+		    {{ form.non_field_errors }}
+	        {{ form.urlfull.errors }}
+	        <label for="urlfull">URL:</label>
+	        <p>{{ form.urlfull }}</p>	
+			<input type="submit" value="Add"/>
+		</form>
+
+		<h1>Existing URL</h1>
+		<ul>
+		{% for s in shrt %}		
+			<li><a href="{% url 'show_shrt' s.urlshort %}">{{ s.urlshort }}</a></li>		
+		{% endfor %}
+		</ul>
+		{% endif %}
+	</body>
+</html>
