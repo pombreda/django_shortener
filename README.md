@@ -24,3 +24,10 @@ How it's working :
 The full URL are stored "as is" with an associated short URL automatically generated and a MD5 is done on this one and stored too
 
 When a short url is displayed, to get the full 'version', we do a MD5 of this one and retreive the full one.    
+
+to set the size, add this to your settings.py
+
+	#set the size of the length of the short url to be build
+	SHRT = {
+    	'url_size':20
+    } 
