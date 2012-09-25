@@ -27,7 +27,19 @@ When a short url is displayed, to get the full 'version', we do a MD5 of this on
 
 to set the size, add this to your settings.py
 
-	#set the size of the length of the short url to be build
+	
 	SHRT = {
-    	'url_size':20
+    	'url_size':20, 					#set the size of the length of the short url to be build
+    	'url_domain':'http://foo.bar/ 	#set the domain that will provide the URL shortener
     } 
+    
+in TEMPLATE_CONTEXT_PROCESSORS add 
+
+    'django_shortener.context_processors.short_domain',
+        
+thus you could use the foo.bar domain as the short domain that will handle the short url 
+and so in your template use : 
+
+    <a href="{{ short_domain.url_domain }}{{ shrt.urlshrt }}">{{ shrt.urlfull }}</a>  
+
+you can have a look at the home.html template for a closer look at how it works

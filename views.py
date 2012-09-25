@@ -6,6 +6,7 @@ from django.http import Http404
 from django.contrib.auth.models import User
 from django.conf import settings
 from django import forms
+from django.template import RequestContext
 
 from django_shortener.urlshortener import urlshortener
 from django_shortener.forms import ShrtForm
@@ -25,20 +26,26 @@ def home(request):
     form = ShrtForm()
     context = {'form':form, 'shrt': shortener}
     context.update(csrf(request))
-    return render_to_response('django_shortener/home.html', context)
+    return render_to_response('django_shortener/home.html', context, context_instance=RequestContext(request))
 """
     save a new full url in a short way
     1) we check the POST request
     2) we validate the form
-    3) we calculate the MD5 of the urlfull field
-    4) we check if that md5 is already in the database
-    5) if yes ; we stop
-    6) if no ; we store the datas
+    3) if validated: we store the datas
 """
 def new_shrt(request):
+    #1)
     if request.method == 'POST':
         form = ShrtForm(request.POST)
+        #2)
         if form.is_valid():
+            #user ?
+            if request.user.is_authenticated():
+                user = request.user
+            else:
+                user = User()
+                user.id = 0
+            
             #create a md5sum on the urlfull
             urlmd5 = hashlib.md5(form.cleaned_data['urlfull'])            
 
@@ -50,33 +57,22 @@ def new_shrt(request):
             urlshort = shrt.run(length["url_size"])
             
             #start an instance of the form
-            new_shortener = form.save(commit=False)                
-            
-            #1) urlshortener
+            new_shortener = form.save(commit=False)                            
             #assign the shortener                 
-            new_shortener.urlshort = urlshort
-            
-            #2) md5 of the urlfull
+            new_shortener.urlshort = urlshort        
             #assign the urlmd5 calculated "before" the "try/except"
-            new_shortener.urlmd5 = urlmd5.hexdigest()
-            
-            #3) 
-            #user ?
-            if request.user.is_authenticated():
-                user = request.user
-            else:
-                user = User()
-                user.id = 0
+            new_shortener.urlmd5 = urlmd5.hexdigest()            
             #assign the user object
             new_shortener.user = user
             #finally : SAVE !
             new_shortener.save()
+            
             return redirect(home)
     
     #part done while the request.methode != POST or form is not valid
     context = {'form':form, 'shrt': Shrt.objects.all}
     context.update(csrf(request))            
-    return render_to_response('django_shortener/home.html', context)              
+    return render_to_response('django_shortener/home.html', context, context_instance=RequestContext(request))              
 
 """
     show the full url from a short one
@@ -86,7 +82,7 @@ def show_shrt(request,shrt):
         #then let's search the url from its "MD5 sum"
         urlfull = Shrt.objects.filter(urlshort__exact=shrt)
         context = {'shrt': urlfull, 'action':'show_shrt'}
-        return render_to_response('django_shortener/home.html', context)
+        return render_to_response('django_shortener/home.html', context, context_instance=RequestContext(request))
                 
     except Shrt.DoesNotExist:
         raise Http404

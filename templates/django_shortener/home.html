@@ -10,7 +10,7 @@
 		<h1>URL details</h1>
 		<p>
 		{% for s in shrt %}
-			Go to <a href="{{ s.urlfull }}">{{ s.urlfull }}</a>
+			Go to <a href="{{ short_domain.url_domain }}{{ s.urlshort }}">{{ s.urlfull }}</a>
 		{% endfor %}			
 		</p>
 		{% else %}
@@ -18,8 +18,7 @@
 		<form method="post" action="{% url 'new_shrt' %}">{% csrf_token %}
 		    {{ form.non_field_errors }}
 	        {{ form.urlfull.errors }}
-	        <label for="urlfull">URL:</label>
-	        <p>{{ form.urlfull }}</p>	
+	        <label for="urlfull">URL : </label>{{ form.urlfull }}	
 			<input type="submit" value="Add"/>
 		</form>
 
