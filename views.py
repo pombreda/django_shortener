@@ -3,23 +3,20 @@ from __future__ import unicode_literals
 from django.core.context_processors import csrf
 from django.shortcuts import render_to_response,redirect
 from django.http import Http404
-from django_shortener.models import Shrt
 from django.contrib.auth.models import User
 from django.conf import settings
+from django import forms
+
 from django_shortener.urlshortener import urlshortener
+from django_shortener.forms import ShrtForm
+from django_shortener.models import Shrt
 
 import hashlib
 
 import logging
 
 logger = logging.getLogger(__name__)
-
-from django.forms import ModelForm
-
-class ShrtForm(ModelForm):
-    class Meta:
-        model = Shrt
-        fields = ('urlfull',)
+    
 """
     home page
 """
@@ -42,56 +39,45 @@ def new_shrt(request):
     if request.method == 'POST':
         form = ShrtForm(request.POST)
         if form.is_valid():
-            #get the Model object
-            shrt_url = Shrt()
             #create a md5sum on the urlfull
-            urlmd5 = hashlib.md5(form.cleaned_data['urlfull'])
-            shrt_url.urlmd5 = urlmd5.hexdigest()
+            urlmd5 = hashlib.md5(form.cleaned_data['urlfull'])            
 
             #get the size of the random shortener string
             length = settings.SHRT
+            
             #let's generate the shortener string
             shrt = urlshortener()
-            shortener = shrt.run(length["url_size"])
+            urlshort = shrt.run(length["url_size"])
+            
+            #start an instance of the form
+            new_shortener = form.save(commit=False)                
+            
+            #1) urlshortener
+            #assign the shortener                 
+            new_shortener.urlshort = urlshort
+            
+            #2) md5 of the urlfull
+            #assign the urlmd5 calculated "before" the "try/except"
+            new_shortener.urlmd5 = urlmd5.hexdigest()
+            
+            #3) 
+            #user ?
+            if request.user.is_authenticated():
+                user = request.user
+            else:
+                user = User()
+                user.id = 0
+            #assign the user object
+            new_shortener.user = user
+            #finally : SAVE !
+            new_shortener.save()
+            return redirect(home)
+    
+    #part done while the request.methode != POST or form is not valid
+    context = {'form':form, 'shrt': Shrt.objects.all}
+    context.update(csrf(request))            
+    return render_to_response('django_shortener/home.html', context)              
 
-            from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
-            try:
-                #check if the urlfull is unique by verifying its md5
-                shrt_url.validate_unique()
-                
-                #start an instance of the form
-                new_shortener = form.save(commit=False)                
-                
-                #1) urlshortener
-                #assign the shortener                 
-                new_shortener.urlshort = shortener
-                
-                #2) md5 of the urlfull
-                #assign the urlmd5 calculated "before" the "try/except"
-                new_shortener.urlmd5 = urlmd5.hexdigest()
-                
-                #3) 
-                #user ?
-                if request.user.is_authenticated():
-                    user = request.user
-                else:
-                    user = User()
-                    user.id = 0
-                #assign the user object
-                new_shortener.user = user
-                #finally : SAVE !
-                new_shortener.save()
-                
-            #validation error
-            except ValidationError as e:
-                non_field_errors = e.message_dict['urlmd5']
-        
-        #create a new instance for the new form :)
-        form = ShrtForm()        
-        context = {'form':form, 'shrt': shortener}
-        context.update(csrf(request))
-        
-    return redirect(home)
 """
     show the full url from a short one
 """
