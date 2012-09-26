@@ -25,6 +25,8 @@ The full URL are stored "as is" with an associated short URL automatically gener
 
 When a short url is displayed, to get the full 'version', we do a MD5 of this one and retreive the full one.    
 
+settings : 
+----------
 to set the size, add this to your settings.py
 
 	
@@ -36,10 +38,21 @@ to set the size, add this to your settings.py
 in TEMPLATE_CONTEXT_PROCESSORS add 
 
     'django_shortener.context_processors.short_domain',
-        
+
 thus you could use the foo.bar domain as the short domain that will handle the short url 
-and so in your template use : 
+
+in the templates : 
+------------------
+in your templates to create a link : 
 
     <a href="{{ short_domain.url_domain }}{{ shrt.urlshrt }}">{{ shrt.urlfull }}</a>  
 
 you can have a look at the home.html template for a closer look at how it works
+
+if you need a template tag that parses a text and retreive links with short url use 
+   
+    {{ text|shrt }}
+   
+or even 
+
+    {{ text|shrt|escape|safe }}
