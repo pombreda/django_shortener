@@ -45,7 +45,7 @@ in the templates :
 ------------------
 in your templates to create a link : 
 
-    <a href="{{ short_domain.url_domain }}{{ shrt.urlshrt }}">{{ shrt.urlfull }}</a>  
+    <a href="{{ short_domain.url_domain }}{{ shrt.urlshort }}">{{ shrt.urlfull }}</a>  
 
 you can have a look at the home.html template for a closer look at how it works
 
