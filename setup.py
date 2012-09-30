@@ -7,6 +7,7 @@ setup(
     author='Olivier Demah',
     author_email='olivier@foxmask.info',
     url='https://github.com/foxmask/django_shortener',
+    download_url='https://github.com/downloads/foxmask/django_shortener/django-shortener-0.1.tar.gz',  
     packages=['django_shortener'],
     classifiers=[
         'Development Status :: 4 - Beta',
