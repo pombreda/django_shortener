@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
     home page
 """
 def home(request):
-    shortener = Shrt.objects.all()
+    shortener = Shrt.objects.all().order_by('-id')[:5]
     form = ShrtForm()
     context = {'form':form, 'shrt': shortener}
     context.update(csrf(request))

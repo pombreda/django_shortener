@@ -5,29 +5,85 @@
 	    <meta charset="utf-8">
 	    <title>Django Shortener</title>
 	</head>
+	<style type="text/css">
+		html {
+			background-color: #222222;
+		}
+		body {
+			background: none repeat scroll 0 0 transparent;
+			max-width: 960px;
+			margin: 0 auto;
+		}
+		header {
+			background-color: #333333;
+			color: #6B6B6B;	
+			padding: 1em;		
+		}
+		h2 {
+			padding: 10px;
+			color: #6B6B6B;
+		}
+		a:hover {
+			color: #0181EB;
+		}
+		a {
+			color: #1863A1;
+		}		
+		#page {			
+			margin: 0 auto;
+			padding: 3em;
+		}
+		#id_urlfull{
+			height:auto;
+			font: 16px arial,sans-serif;
+		}
+		article {
+			border: 1px solid #DDDDDD;
+		    background-color: white;
+		    border-radius: 5px 5px 5px 5px;
+		    clear: both;
+		    color: #6B6B6B;
+		    font-size: 1.1em;
+		    margin: 1em 0;
+		    padding: 1em;			
+		}
+		article:hover{
+			background-color: #333333;
+		}
+	</style>
 	<body>
+		<header>
+			<h1>Django Shortener</h1>				
+		</header>		
 		{% if action == 'show_shrt' %}
-		<h1>URL details</h1>
-		<p>
-		{% for s in shrt %}
-			Go to <a href="{{ short_domain.url_domain }}{{ s.urlshort }}">{{ s.urlfull }}</a>
-		{% endfor %}			
-		</p>
+		<div id="page">
+			<h2>URL details</h2>
+			{% for s in shrt %}
+				<article>
+					Go to: <a href="{{ short_domain.url_domain }}{{ s.urlshort }}">{{ s.urlfull }}</a>
+				</article>
+			{% endfor %}
+		</div>		
 		{% else %}
-		<h1>Adding a new URL</h1>
-		<form method="post" action="{% url 'new_shrt' %}">{% csrf_token %}
-		    {{ form.non_field_errors }}
-	        {{ form.urlfull.errors }}
-	        <label for="urlfull">URL : </label>{{ form.urlfull }}	
-			<input type="submit" value="Add"/>
-		</form>
-
-		<h1>Existing URL</h1>
-		<ul>
-		{% for s in shrt %}		
-			<li><a href="{% url 'show_shrt' s.urlshort %}">{{ s.urlshort }}</a></li>		
-		{% endfor %}
-		</ul>
+		<div id="page">		
+			<div align="center">
+				<form method="post" action="{% url 'new_shrt' %}">{% csrf_token %}
+				    {{ form.non_field_errors }}
+			        {{ form.urlfull.errors }}
+			        {{ form.urlfull }}	
+					<input type="submit" value="Add"/>
+				</form>
+			</div>
+		</div>
+		<div id="list">
+			<h2>5 Last Added URL</h2>
+			{% for s in shrt %}		
+				<article>
+					<a href="{% url 'show_shrt' s.urlshort %}">{{ s.urlshort }}</a>
+				</article>		
+			{% endfor %}
+		</div>
 		{% endif %}
+		</div>
 	</body>
 </html>
