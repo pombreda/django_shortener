@@ -75,14 +75,15 @@ def new_shrt(request):
     return render_to_response('django_shortener/home.html', context, context_instance=RequestContext(request))              
 
 """
-    show the full url from a short one
+    go to the full url from a short one
 """
-def show_shrt(request,shrt):       
+def shrt_go(request,shrt):
     try:
         #then let's search the url from its "MD5 sum"
+        #shrt is uniq
         urlfull = Shrt.objects.filter(urlshort__exact=shrt)
-        context = {'shrt': urlfull, 'action':'show_shrt'}
-        return render_to_response('django_shortener/home.html', context, context_instance=RequestContext(request))
+        for s in urlfull:
+            return redirect(s.urlfull)
                 
     except Shrt.DoesNotExist:
         raise Http404
