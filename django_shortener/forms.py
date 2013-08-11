@@ -14,7 +14,7 @@ class ShrtForm(ModelForm):
         model = Shrt
         fields = ('urlfull',)
         widgets = {               
-                   'urlfull': TextInput(attrs={'placeholder':_('add a shorten url'),'size':80})
+                   'urlfull': TextInput(attrs={'placeholder':_('enter an url'),'size':80})
         }
         
     """         
