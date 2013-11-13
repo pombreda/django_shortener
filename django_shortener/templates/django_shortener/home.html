@@ -1,80 +1,81 @@
-{% load url from future %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
+{% load static %}
+{% load staticfiles %}
+{% load i18n %}
+{% load url from future %}
 <head>
-    <meta charset="utf-8">
-    <title>Django Shortener</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>{% block title %}{% trans "URL shortener" %}{% endblock %}</title>
+    <meta content='Shortener URL service' name='keywords'>
+    <link rel="stylesheet" href="{% static "bootstrap/css/bootstrap.min.css" %}" type="text/css" media="screen" />
+    <link rel="stylesheet" href="{% static "css/shrt.css" %}" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="{% static "bootstrap/css/bootstrap-responsive.min.css" %}" type="text/css" media="screen" />
+    <meta name="viewport" content="width=device-width; initial-scale=1.0" />
+    <meta name="author" content="FoxMaSk">
+<!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+    <!-- script type="text/javascript" src="{% static "jquery/jquery.js" %}" ></script-->
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script type="text/javascript" src="{% static "bootstrap/js/bootstrap.min.js" %}" ></script>
 </head>
-<style type="text/css">
-	html {
-		background-color: #222222;
-	}
-	body {
-		background: none repeat scroll 0 0 transparent;
-		max-width: 960px;
-		margin: 0 auto;
-	}
-	header {
-		background-color: #333333;
-		color: #6B6B6B;	
-		padding: 1em;		
-	}
-	h2 {
-		padding: 10px;
-		color: #6B6B6B;
-	}
-	a:hover {
-		color: #0181EB;
-	}
-	a {
-		color: #1863A1;
-	}		
-	#page {			
-		margin: 0 auto;
-		padding: 3em;
-	}
-	#id_urlfull{
-		height:auto;
-		font: 16px arial,sans-serif;
-	}
-	article {
-		border: 1px solid #DDDDDD;
-	    background-color: white;
-	    border-radius: 5px 5px 5px 5px;
-	    clear: both;
-	    color: #6B6B6B;
-	    font-size: 1.1em;
-	    margin: 1em 0;
-	    padding: 1em;			
-	}
-	article:hover{
-		background-color: #333333;
-	}
-</style>
 <body>
-	<header>
-		<h1>Django Shortener</h1>				
-	</header>		
-	<div id="page">		
-		<div align="center">
-			<form method="post" action="{% url 'new_shrt' %}">{% csrf_token %}
-			    {{ form.non_field_errors }}
-		        {{ form.urlfull.errors }}
-		        {{ form.urlfull }}	
-				<input type="submit" value="Short It!"/>
-			</form>
-		</div>
-	</div>
-	<div id="list">
-		<h2>5 Last Shortened URL</h2>
-        {% for s in shrt %}
-            <article>
-                <ul>
-                	<li><a href="{{ short_domain.url_domain }}{{ s.urlshort }}">{{ short_domain.url_domain }}{{ s.urlshort }}</a></li>
-                	<li><a href="{% url 'show_shrt' s.urlshort %}">{{ s.urlfull }}</a></li>
-                </ul>
-            </article>
-        {% endfor %}
-	</div>
+    {% block navbar %}
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar collapsed" data-target=".nav-collapse" data-toggle="collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <a class="brand" href="/" title="{% trans "Home" %}">Shortener</a>
+                <div class="nav-collapse collapse">
+                </div>
+            </div><!--/.container-fluid -->
+        </div><!--/.navbar-inner -->
+    </div><!--/.navbar -->
+    {% endblock navbar %}
+    <div class="container">
+        <div class="row">
+        {% block content %}
+            <div class="hero-unit">
+                <h1>Shortener</h1>
+                <p><strong>the URL Shortener</strong> service is here for you</p>
+            </div>
+            <div class="span4 offset4" id="shrt-content">
+                <form method="post" action="{% url 'new_shrt' %}">{% csrf_token %}
+                <fieldset>
+                {{ form.non_field_errors }}
+                {{ form.urlfull.errors }}
+                <div class="control-group input-append info">
+                    {{ form.urlfull }}
+                    <button class="btn btn-info" type="submit">Short It!</button>
+                </div>
+                </fieldset>
+                </form>
+            </div>
+            <div class="span12">
+                <h2>5 Last Shortened URLs</h2>
+                {% for s in shrt %}     
+                <article>
+                    <div class="shrt-record">
+                    <ul><li><a href="{{ short_domain.url_domain }}{{ s.urlshort }}">{{ short_domain.url_domain }}{{ s.urlshort }}</a></li>
+                    <li><a href="{% url 'show_shrt' s.urlshort %}">{{ s.urlfull }}</a></li></ul>
+                    </div>
+                </article>      
+                {% endfor %}
+            </div>
+        {% endblock %}
+        {% block sidebar %}
+        {% endblock sidebar %}
+        </div>
+    </div><!--/.container-->
+    <hr/>
+    <footer class="footer">
+
+    </footer>
 </body>
 </html>
