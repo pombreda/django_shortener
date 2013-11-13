@@ -36,7 +36,7 @@ to set the size, add this to your settings.py
 	
 	SHRT = {
     	'url_size':20, 					#set the size of the length of the short url to be build
-    	'url_domain':'http://foo.bar/ 	#set the domain that will provide the URL shortener
+    	'url_domain':'http://foo.bar/' 	#set the domain that will provide the URL shortener
     } 
     
 in TEMPLATE_CONTEXT_PROCESSORS add 

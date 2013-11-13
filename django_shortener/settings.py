@@ -131,6 +131,10 @@ INSTALLED_APPS = (
 SHRT = {'url_size': 20,
         'short_domain': 'http://fxk.me'}
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django_shortener.context_processors.short_domain',
+)
+
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
