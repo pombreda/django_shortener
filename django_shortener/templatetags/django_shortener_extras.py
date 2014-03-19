@@ -17,7 +17,7 @@ def shrt(input):
 def shrt_replace(matchobj):
     links = ''
     urlmd5 = hashlib.md5(matchobj.group(0))
-    print urlmd5.hexdigest()
+    
     shrt_url = Shrt.objects.filter(urlmd5__exact=urlmd5.hexdigest())
     for url in shrt_url:
         links += '<a href="'+settings.SHRT['url_domain']+url.urlshort+'">'+url.urlfull+'</a>'

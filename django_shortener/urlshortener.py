@@ -50,4 +50,3 @@ class urlshortener():
         
 if __name__ == "__main__":
     shrt = Urlshortener()
-    print shrt.run(10)

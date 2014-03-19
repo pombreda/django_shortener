@@ -1,4 +1,6 @@
 exclude django_shortener/local_settings.py
+exclude django_shortener/settings.py
+exclude django_shortener/wsgi.py
 include *.txt *.rst 
 recursive-include django_shortener *.html *.png *.css *.gif *.jpg *.jpeg
 recursive-include django_shortener/templates *

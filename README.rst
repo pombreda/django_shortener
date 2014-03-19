@@ -2,35 +2,33 @@
 Django Shortener
 ================
 
-Create short URL from a long one
+Description :
+=============
 
-The model is this one :
-
-.. code: python
-
-
-    from django.db import models
-
-    from django.contrib.auth.models import User
- 
-    class Shrt(models.Model):
-	    urlfull = models.URLField(unique=True)
-	    urlmd5 = models.CharField(max_length=40,unique=True)
-	    urlshort = models.CharField(max_length=80)
-	    user = models.ForeignKey(User)
+Django Shortener provides an URL shortener service
 
 
+Requirements :
+==============
+* Python = 3.4.0
+* Django >= 1.5
+* django-simple-captcha = 0.4.2
 
-How it's working :
-=================
 
-The full URL are stored "as is" with an associated short URL automatically generated and a MD5 is done on this one and stored too
-
-When a short url is displayed, to get the full 'version', we do a MD5 of this one and retreive the full one.    
+Installation :
+=============
 
 settings : 
-----------
-to set the size, add this to your settings.py
+---------
+
+.. code:: python
+
+    INSTALLED_APPS = (
+            'django_th',
+    )
+
+
+you can set the size of the URL and also the domain that will host the service:
 
 .. code:: python
 	
@@ -46,6 +44,16 @@ in TEMPLATE_CONTEXT_PROCESSORS add
     'django_shortener.context_processors.short_domain',
 
 thus you could use the foo.bar domain as the short domain that will handle the short url 
+
+
+To set a simple captcha, add the following to ask math question and "drop"
+noises
+
+.. code:: python
+
+    CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
+    CAPTCHA_NOISE_FUNCTIONS = ()
+
 
 in the templates : 
 ------------------
@@ -68,3 +76,10 @@ or even
 .. code:: python
 
     {{ text|shrt|escape|safe }}
+    
+How it's working :
+=================
+
+The full URL are stored "as is" with an associated short URL automatically generated and a MD5 is done on this one and stored too
+
+When a short url is displayed, to get the full 'version', we do a MD5 of this one and retreive the full one.    

@@ -7,19 +7,10 @@
 <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <title>{% block title %}{% trans "URL shortener" %}{% endblock %}</title>
+    <title>{% block title %}{% trans "URL shortener" %} - Mysite.com{% endblock %}</title>
     <meta content='Shortener URL service' name='keywords'>
-    <link rel="stylesheet" href="{% static "bootstrap/css/bootstrap.min.css" %}" type="text/css" media="screen" />
-    <link rel="stylesheet" href="{% static "css/shrt.css" %}" type="text/css" media="screen"/>
-    <link rel="stylesheet" href="{% static "bootstrap/css/bootstrap-responsive.min.css" %}" type="text/css" media="screen" />
     <meta name="viewport" content="width=device-width; initial-scale=1.0" />
     <meta name="author" content="FoxMaSk">
-<!--[if lt IE 9]>
-    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
-    <!-- script type="text/javascript" src="{% static "jquery/jquery.js" %}" ></script-->
-    <script src="http://code.jquery.com/jquery.js"></script>
-    <script type="text/javascript" src="{% static "bootstrap/js/bootstrap.min.js" %}" ></script>
 </head>
 <body>
     {% block navbar %}
@@ -31,9 +22,8 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </a>
-                <a class="brand" href="/" title="{% trans "Home" %}">Shortener</a>
-                <div class="nav-collapse collapse">
-                </div>
+                <a class="brand" href="/" title="{% trans "Home" %}">Mysite.com</a>
+                <div class="nav-collapse collapse"></div>
             </div><!--/.container-fluid -->
         </div><!--/.navbar-inner -->
     </div><!--/.navbar -->
@@ -42,32 +32,37 @@
         <div class="row">
         {% block content %}
             <div class="hero-unit">
-                <h1>Shortener</h1>
-                <p><strong>the URL Shortener</strong> service is here for you</p>
-            </div>
-            <div class="span4 offset4" id="shrt-content">
+            <h1>Mysite.com</h1>
+            	<p><strong>the URL Shortener</strong> service is here for you</p>
+   	        </div>
+	        <div class="span4 offset4" id="fxk-content">
                 <form method="post" action="{% url 'new_shrt' %}">{% csrf_token %}
-                <fieldset>
-                {{ form.non_field_errors }}
-                {{ form.urlfull.errors }}
-                <div class="control-group input-append info">
-                    {{ form.urlfull }}
-                    <button class="btn btn-info" type="submit">Short It!</button>
-                </div>
-                </fieldset>
-                </form>
-            </div>
-            <div class="span12">
-                <h2>5 Last Shortened URLs</h2>
-                {% for s in shrt %}     
-                <article>
-                    <div class="shrt-record">
-                    <ul><li><a href="{{ short_domain.url_domain }}{{ s.urlshort }}">{{ short_domain.url_domain }}{{ s.urlshort }}</a></li>
-                    <li><a href="{% url 'show_shrt' s.urlshort %}">{{ s.urlfull }}</a></li></ul>
+                    <fieldset>
+    	            {{ form.non_field_errors }}
+                    {{ form.urlfull.errors }}
+    	            <div class="control-group input-append info">
+    		        {{ form.captcha }}
                     </div>
-                </article>      
+    	            <div class="control-group input-append info">
+    		        {{ form.urlfull }}
+    		        <button class="btn btn-info" type="submit">Short it!</button>
+    	            </div>
+                    </fieldset>
+                </form>
+    	    </div>
+    	    <div class="span12">
+                <h2>5 Last Shortened URLs</h2>
+                {% for s in shrt %}		
+                <article>
+                <div class="fxk-record">
+                    <ul>
+                        <li><a href="{{ short_domain.url_domain }}{{ s.urlshort }}">{{ short_domain.url_domain }}{{ s.urlshort }}</a></li>
+                        <li><a href="{% url 'show_shrt' s.urlshort %}">{{ s.urlfull }}</a></li>
+                    </ul>
+                </div>
+                </article>		
                 {% endfor %}
-            </div>
+    	    </div>
         {% endblock %}
         {% block sidebar %}
         {% endblock sidebar %}
@@ -75,7 +70,8 @@
     </div><!--/.container-->
     <hr/>
     <footer class="footer">
-
+        {% block footer %}
+        {% endblock footer %}
     </footer>
 </body>
 </html>
